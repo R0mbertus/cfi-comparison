@@ -1,0 +1,9 @@
+services:
+  machine-learning:
+    build: 
+      context: .
+    volumes:
+      - .:/usr/src/app:Z
+    container_name: bachelor-thesis
+    command: /bin/bash
+    tty: true
