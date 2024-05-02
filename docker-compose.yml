@@ -1,5 +1,5 @@
 services:
-  machine-learning:
+  bachelor-thesis:
     build: 
       context: .
     volumes:
