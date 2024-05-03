@@ -38,14 +38,14 @@ while getopts ":beh" flag; do
 done
 
 # Sanity check; is docker & co installed?
-if ! command -v docker &> /dev/null | command -v docker-compose &> /dev/null; 
+if ! command -v docker &> /dev/null;
 then
-    echo "[:(] docker and/or docker-compose is not installed."
+    echo "[:(] docker is not installed."
     exit 1
 fi
 
 if [ "$force_build" == false ] && \
-    docker-compose ps $container | grep Up &> /dev/null;
+    docker compose ps $container | grep Up &> /dev/null;
 then
     [ "$enter" == true ] && enter_container
     echo "[:(] Container is already running, did you mean to run with -e?"
@@ -54,10 +54,10 @@ fi
 
 # Build and start the docker container
 echo "[--] Building container, may take a while..."
-docker-compose build &> /dev/null
+docker compose build &> /dev/null
 echo "[:)] Docker container built!"
 echo "[--] Starting container..."
-docker-compose up -d &> /dev/null
+docker compose up -d &> /dev/null
 echo "[:)] Docker container up & running!"
 
 [ "$enter" == true ] && enter_container

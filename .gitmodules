@@ -1,0 +1,6 @@
+[submodule "cfi-eval-me"]
+	path = cfi-eval
+	url = https://github.com/R0mbertus/cfi-eval.git
+[submodule "ripe64-me"]
+	path = ripe64
+	url = https://github.com/R0mbertus/ripe64.git

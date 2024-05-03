@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(llvm-tutor)
+project(bachelor-thesis)
 
 #===============================================================================
 # 1. VERIFY LLVM INSTALLATION DIR
@@ -52,8 +52,8 @@ list(APPEND CMAKE_PREFIX_PATH "${LT_LLVM_INSTALL_DIR}/lib/cmake/llvm/")
 find_package(LLVM CONFIG)
 
 # We defer the version checking to this statement
-if("${LLVM_VERSION_MAJOR}" VERSION_LESS 17)
-  message(FATAL_ERROR "Found LLVM ${LLVM_VERSION_MAJOR}, but need LLVM 17 or above")
+if("${LLVM_VERSION_MAJOR}" VERSION_LESS 15)
+  message(FATAL_ERROR "Found LLVM ${LLVM_VERSION_MAJOR}, but need LLVM 15 or above")
 endif()
 
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
@@ -72,7 +72,7 @@ link_directories(${LLVM_LIBRARY_DIRS})
 add_definitions(${LLVM_DEFINITIONS})
 
 #===============================================================================
-# 3. LLVM-TUTOR BUILD CONFIGURATION
+# 3. BUILD CONFIGURATION
 #===============================================================================
 # Use the same C++ standard as LLVM does
 set(CMAKE_CXX_STANDARD 17 CACHE STRING "")
@@ -92,9 +92,6 @@ if(NOT LLVM_ENABLE_RTTI)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-rtti")
 endif()
 
-# -fvisibility-inlines-hidden is set when building LLVM and on Darwin warnings
-# are triggered if llvm-tutor is built without this flag (though otherwise it
-# builds fine). For consistency, add it here too.
 include(CheckCXXCompilerFlag)
 check_cxx_compiler_flag("-fvisibility-inlines-hidden" SUPPORTS_FVISIBILITY_INLINES_HIDDEN_FLAG)
 if (${SUPPORTS_FVISIBILITY_INLINES_HIDDEN_FLAG} EQUAL "1")
@@ -111,5 +108,4 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/lib")
 # available for the sub-projects.
 #===============================================================================
 add_subdirectory(lib)
-add_subdirectory(tools)
 add_subdirectory(test)

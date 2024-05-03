@@ -9,7 +9,7 @@ set(InjectFuncCall_SOURCES
 
 # CONFIGURE THE PLUGIN LIBRARIES
 # ==============================
-foreach( plugin ${LLVM_TUTOR_PLUGINS} )
+foreach( plugin ${LLVM_CFI_PLUGINS} )
     # Create a library corresponding to 'plugin'
     add_library(
       ${plugin}

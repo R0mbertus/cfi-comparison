@@ -1,7 +1,7 @@
 FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
-ENV LLVM_DIR /usr/lib/llvm-17/
+ENV LLVM_DIR /usr/lib/llvm-15/
 
 # Install needed base packages
 RUN apt-get update && apt-get install -y    \
@@ -10,17 +10,17 @@ RUN apt-get update && apt-get install -y    \
     wget software-properties-common
 
 # Setup LLVM repos for ubuntu
-RUN echo deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-17 main     \
+RUN echo deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-15 main     \
     | tee -a /etc/apt/sources.list
-RUN echo deb-src http://apt.llvm.org/focal/ llvm-toolchain-focal-17 main \
+RUN echo deb-src http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main \
     | tee -a /etc/apt/sources.list
 RUN wget -O llvm-snapshot.gpg.key https://apt.llvm.org/llvm-snapshot.gpg.key
 RUN apt-key add llvm-snapshot.gpg.key
 
 # Install LLVM
 RUN apt-get update -y && apt-get upgrade -y && apt-get install -y              \
-    libllvm17 llvm-17 llvm-17-dev llvm-17-doc llvm-17-examples llvm-17-runtime \
-    libedit-dev libzstd-dev libcurl4-gnutls-dev libstdc++-12-dev clang-17
+    libllvm15 llvm-15 llvm-15-dev llvm-15-doc llvm-15-examples llvm-15-runtime \
+    libedit-dev libzstd-dev libcurl4-gnutls-dev clang-15
 
 WORKDIR /usr/src/app
 CMD ["/bin/bash"]
