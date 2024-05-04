@@ -1,11 +1,11 @@
 # THE LIST OF PLUGINS AND THE CORRESPONDING SOURCE FILES
 # ======================================================
 set(LLVM_CFI_PLUGINS
-    InjectFuncCall
+    ControlFlowIntegrity
 )
 
-set(InjectFuncCall_SOURCES
-  InjectFuncCall.cpp)
+set(ControlFlowIntegrity_SOURCES
+    ControlFlowIntegrity.cpp)
 
 # CONFIGURE THE PLUGIN LIBRARIES
 # ==============================

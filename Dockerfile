@@ -2,6 +2,8 @@ FROM ubuntu:22.04
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV LLVM_DIR /usr/lib/llvm-15/
+ENV CC clang-15
+ENV CXX clang++-15
 
 # Install needed base packages
 RUN apt-get update && apt-get install -y    \
