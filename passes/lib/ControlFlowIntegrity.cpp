@@ -29,31 +29,18 @@ using namespace llvm;
 //-----------------------------------------------------------------------------
 // ControlFlowIntegrity implementation
 //-----------------------------------------------------------------------------
-ControlFlowIntegrity::ReturnGraph
-ControlFlowIntegrity::GetReturnGraph(Module &M, CallGraph &CG) {
-    ControlFlowIntegrity::ReturnGraph RG;
-
-    for (auto IT = scc_begin(&CG), IE = scc_end(&CG); IT != IE; ++IT) {
-        // Get the current SCC and iterate over each node in the SCC
-        const std::vector<CallGraphNode *> &SCC = *IT;
-        for (auto *CGN : SCC) {
-            // Get the caller function and iterate over each callee
-            Function *Caller = CGN->getFunction();
-            if (!Caller)
-                continue;
-            for (auto &E : *CGN) {
-                // Get the callee and insert the caller into the set of callers
-                Function *Callee = E.second->getFunction();
-                RG[Callee].insert(Caller);
-            }
-        }
+bool ControlFlowIntegrity::setupTypeAnalysis(Module &M,
+                                             ModuleAnalysisManager &AM) {
+    // Map types to functions
+    std::map<FunctionType *, std::set<Function *>> TypeToFuncs;
+    for (auto &F : M) {
+        TypeToFuncs[F.getFunctionType()].insert(&F);
     }
 
-    return RG;
+    //
 }
 
-bool ControlFlowIntegrity::runOnModule(Module &M,
-                                       ControlFlowIntegrity::ReturnGraph &RG) {
+bool ControlFlowIntegrity::instrumentTypes(Module &M) {
     bool insertedChecks = false;
 
     for (Function &F : M) {
@@ -64,6 +51,8 @@ bool ControlFlowIntegrity::runOnModule(Module &M,
                 //   - actually go to function if valid target
                 //   - panic if not valid
 
+                // We only care about indirect calls, direct calls can't be
+                // hijacked
                 if (!CB->isIndirectCall())
                     continue;
 
@@ -80,9 +69,8 @@ bool ControlFlowIntegrity::runOnModule(Module &M,
 
 PreservedAnalyses ControlFlowIntegrity::run(llvm::Module &M,
                                             llvm::ModuleAnalysisManager &AM) {
-    auto &CG = AM.getResult<CallGraphAnalysis>(M);
-    auto RG = ControlFlowIntegrity::GetReturnGraph(M, CG);
-    bool changed = runOnModule(M, RG);
+    bool changed = setupTypeAnalysis(M, AM);
+    changed |= instrumentTypes(M);
 
     return (changed ? llvm::PreservedAnalyses::none()
                     : llvm::PreservedAnalyses::all());
