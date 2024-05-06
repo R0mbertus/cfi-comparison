@@ -3,7 +3,8 @@
 //    ControlFlowIntegrity.h
 //
 // DESCRIPTION:
-//    WIP
+//    Header for ControlFlowIntegrity.cpp. See that file for implementation
+//    details.
 //
 // License: MIT
 //==============================================================================

@@ -3,11 +3,12 @@
 //    ControlFlowIntegrity.cpp
 //
 // DESCRIPTION:
-//    WIP
+//    Implementation of a simple Control Flow Integrity (CFI) pass that
+//    utilizes type analysis for equivalence classes.
 //
 // USAGE:
-//      $ opt -load-pass-plugin <BUILD_DIR>/lib/libControlFlowIntegrity.so `\`
-//        -passes=-"cfi-base" <bitcode-file>
+//    $ clang++-15 -O0 -fpass-plugin=build/lib/libControlFlowIntegrity.so \
+//          test/<file-to-build> -o test/<output-file>
 //
 // License: MIT
 //========================================================================
