@@ -13,12 +13,17 @@
 #include "llvm/IR/PassManager.h"
 #include "llvm/Pass.h"
 
+#include <map>
+
 //------------------------------------------------------------------------------
 // New PM interface
 //------------------------------------------------------------------------------
 struct ControlFlowIntegrity : public llvm::PassInfoMixin<ControlFlowIntegrity> {
-    bool setupTypeAnalysis(llvm::Module &M, llvm::ModuleAnalysisManager &AM);
-    bool instrumentTypes(llvm::Module &M);
+    std::map<llvm::FunctionType *, std::set<llvm::Function *>> TypeToFuncs;
+    llvm::Function *CheckFunction = nullptr;
+
+    void setupTypeAnalysis(llvm::Module &M, llvm::ModuleAnalysisManager &AM);
+    void instrumentTypes(llvm::Module &M);
 
     // -------------------------------------------------------------------------
     // LLVM required methods
