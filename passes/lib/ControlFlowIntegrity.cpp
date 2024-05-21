@@ -93,8 +93,8 @@ void ControlFlowIntegrity::setupTypeAnalysis(Module &M,
 
     // Loop end block - if we reacher here none were valid targets, abort
     Builder.SetInsertPoint(ForEndBB);
+    // Builder.CreateCall(M.getOrInsertFunction("abort", VoidTy, nullptr));
     Builder.CreateRetVoid();
-    // TODO actually abort
 }
 
 void ControlFlowIntegrity::instrumentTypes(Module &M) {
@@ -125,12 +125,20 @@ void ControlFlowIntegrity::instrumentTypes(Module &M) {
                     Type::getInt64Ty(M.getContext()), ValidTargetsArray.size());
                 auto *ValidTargetsArrayGEP = Builder.CreateAlloca(
                     ValidTargetsArrayTy, nullptr, "valid_targets");
+                auto *Idx = Builder.CreateAlloca(
+                    Type::getInt32Ty(M.getContext()), nullptr, "i");
+                Builder.CreateStore(
+                    ConstantInt::get(Type::getInt32Ty(M.getContext()), 0), Idx);
                 for (size_t i = 0; i < ValidTargetsArray.size(); i++) {
-                    auto *Idx =
-                        ConstantInt::get(Type::getInt32Ty(M.getContext()), i);
-                    auto *GEP = Builder.CreateGEP(ValidTargetsArrayTy,
-                                                  ValidTargetsArrayGEP, Idx);
+                    auto *IdxLoad = Builder.CreateLoad(
+                        Type::getInt32Ty(M.getContext()), Idx);
+                    auto *GEP = Builder.CreateGEP(
+                        ValidTargetsArrayTy, ValidTargetsArrayGEP, IdxLoad);
                     Builder.CreateStore(ValidTargetsArray[i], GEP);
+                    auto *Inc = Builder.CreateAdd(
+                        IdxLoad,
+                        ConstantInt::get(Type::getInt32Ty(M.getContext()), 1));
+                    Builder.CreateStore(Inc, Idx);
                 }
 
                 // Insert the check function call
@@ -139,11 +147,6 @@ void ControlFlowIntegrity::instrumentTypes(Module &M) {
                     ConstantInt::get(Type::getInt32Ty(M.getContext()),
                                      ValidTargetsArray.size())};
                 Builder.CreateCall(this->CheckFunction, Args);
-
-            } else if (auto *RI = dyn_cast<ReturnInst>(&*I)) {
-                // TODO: ask on how to handle backward edge CFI
-                //   - ShadowStack
-                //   - ReturnAddress (need to modify X86)
             }
         }
     }

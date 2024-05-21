@@ -1,4 +1,4 @@
-#include <random>
+#include <stdlib.h>
 
 void foo(int a) {
     a = 1;
@@ -10,14 +10,23 @@ void bar(int b) {
     return;
 }
 
+void mon(int c) {
+    c = 3;
+    return;
+}
+
 int main(void) {
-    int a = rand() % 2;
+    // srand(time(NULL));
+    int a = 2;
     void (*f)(int);
-    if (a) {
+    if (a == 0) {
         f = foo;
         f(1);
-    } else {
+    } else if (a == 1) {
         f = bar;
+        f(1);
+    } else {
+        f = mon;
         f(1);
     }
 }

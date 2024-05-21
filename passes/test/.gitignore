@@ -3,3 +3,4 @@
 # but not itself and the .cpp files
 !.gitignore
 !*.cpp
+!*.c
