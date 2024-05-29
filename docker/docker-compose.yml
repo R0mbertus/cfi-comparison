@@ -1,0 +1,37 @@
+services:
+  ubuntu14:
+    build:
+      context: .
+      dockerfile: Dockerfile.ubuntu14
+    container_name: ubuntu14
+    volumes:
+      - ../policies:/mnt/shared
+    tty: true
+
+  ubuntu16:
+    build:
+      context: .
+      dockerfile: Dockerfile.ubuntu16
+    container_name: ubuntu16
+    volumes:
+      - ../policies:/mnt/shared
+    tty: true
+
+  ubuntu18:
+    build:
+      context: .
+      dockerfile: Dockerfile.ubuntu18
+    container_name: ubuntu18
+    volumes:
+      - ../policies:/mnt/shared
+    tty: true
+
+  ubuntu22:
+    build:
+      context: .
+      dockerfile: Dockerfile.ubuntu22
+    container_name: ubuntu22
+    volumes:
+      - ../policies:/mnt/shared
+    tty: true
+
