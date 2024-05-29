@@ -4,3 +4,9 @@
 [submodule "cfi-eval"]
 	path = eval/cfi-eval
 	url = https://github.com/R0mbertus/cfi-eval.git
+[submodule "typearmor"]
+	path = policies/typearmor
+	url = https://github.com/vusec/typearmor.git
+[submodule "ccfi"]
+	path = policies/llvm34-ccfi
+	url = https://bitbucket.org/CCFI/llvm34-ccfi.git
