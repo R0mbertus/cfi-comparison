@@ -5,8 +5,9 @@ services:
       dockerfile: Dockerfile.ubuntu14
     container_name: ubuntu14
     volumes:
-      - ../policies:/mnt/shared
+      - ../:/mnt/shared
     tty: true
+    restart: always
 
   ubuntu16:
     build:
@@ -14,8 +15,9 @@ services:
       dockerfile: Dockerfile.ubuntu16
     container_name: ubuntu16
     volumes:
-      - ../policies:/mnt/shared
+      - ../:/mnt/shared
     tty: true
+    restart: always
 
   ubuntu18:
     build:
@@ -23,8 +25,9 @@ services:
       dockerfile: Dockerfile.ubuntu18
     container_name: ubuntu18
     volumes:
-      - ../policies:/mnt/shared
+      - ../:/mnt/shared
     tty: true
+    restart: always
 
   ubuntu22:
     build:
@@ -32,6 +35,6 @@ services:
       dockerfile: Dockerfile.ubuntu22
     container_name: ubuntu22
     volumes:
-      - ../policies:/mnt/shared
+      - ../:/mnt/shared
     tty: true
-
+    restart: always
