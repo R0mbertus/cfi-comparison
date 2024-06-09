@@ -1,9 +1,6 @@
 [submodule "ripe64"]
 	path = eval/ripe64
 	url = https://github.com/R0mbertus/ripe64.git
-[submodule "cfi-eval"]
-	path = eval/cfi-eval
-	url = https://github.com/R0mbertus/cfi-eval.git
 [submodule "ccfi"]
 	path = policies/llvm34-ccfi
 	url = https://bitbucket.org/CCFI/llvm34-ccfi.git
