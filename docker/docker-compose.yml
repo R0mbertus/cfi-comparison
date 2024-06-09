@@ -5,8 +5,8 @@ services:
       dockerfile: Dockerfile.ubuntu14
     container_name: ubuntu14
     volumes:
-      - ../:/mnt/shared
-      - /home/rombertus-laptop/spec:/mnt/spec
+      - ../:/mnt/shared:z
+      - /home/rombertus-laptop/spec:/mnt/spec:z
     tty: true
     restart: always
 
@@ -16,8 +16,8 @@ services:
       dockerfile: Dockerfile.ubuntu16
     container_name: ubuntu16
     volumes:
-      - ../:/mnt/shared
-      - /home/rombertus-laptop/spec:/mnt/spec
+      - ../:/mnt/shared:z
+      - /home/rombertus-laptop/spec:/mnt/spec:z
     tty: true
     restart: always
 
@@ -27,8 +27,19 @@ services:
       dockerfile: Dockerfile.ubuntu18
     container_name: ubuntu18
     volumes:
-      - ../:/mnt/shared
-      - /home/rombertus-laptop/spec:/mnt/spec
+      - ../:/mnt/shared:z
+      - /home/rombertus-laptop/spec:/mnt/spec:z
+    tty: true
+    restart: always
+
+  ubuntu20:
+    build:
+      context: .
+      dockerfile: Dockerfile.ubuntu20
+    container_name: ubuntu20
+    volumes:
+      - ../:/mnt/shared:z
+      - /home/rombertus-laptop/spec:/mnt/spec:z
     tty: true
     restart: always
 
@@ -38,7 +49,7 @@ services:
       dockerfile: Dockerfile.ubuntu22
     container_name: ubuntu22
     volumes:
-      - ../:/mnt/shared
-      - /home/rombertus-laptop/spec:/mnt/spec
+      - ../:/mnt/shared:z
+      - /home/rombertus-laptop/spec:/mnt/spec:z
     tty: true
     restart: always
