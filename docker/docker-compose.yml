@@ -6,6 +6,7 @@ services:
     container_name: ubuntu14
     volumes:
       - ../:/mnt/shared
+      - /home/rombertus-laptop/spec:/mnt/spec
     tty: true
     restart: always
 
@@ -16,6 +17,7 @@ services:
     container_name: ubuntu16
     volumes:
       - ../:/mnt/shared
+      - /home/rombertus-laptop/spec:/mnt/spec
     tty: true
     restart: always
 
@@ -26,6 +28,7 @@ services:
     container_name: ubuntu18
     volumes:
       - ../:/mnt/shared
+      - /home/rombertus-laptop/spec:/mnt/spec
     tty: true
     restart: always
 
@@ -36,5 +39,6 @@ services:
     container_name: ubuntu22
     volumes:
       - ../:/mnt/shared
+      - /home/rombertus-laptop/spec:/mnt/spec
     tty: true
     restart: always
