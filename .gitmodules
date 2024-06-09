@@ -10,3 +10,6 @@
 [submodule "typro"]
 	path = policies/TyPro-CFI
 	url = https://github.com/typro-type-propagation/TyPro-CFI.git
+[submodule "ConFIRM"]
+	path = eval/ConFIRM
+	url = https://github.com/R0mbertus/ConFIRM.git
