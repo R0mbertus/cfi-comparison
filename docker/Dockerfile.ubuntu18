@@ -6,6 +6,6 @@ RUN apt-get update && apt-get install -y \
     cmake \
     ninja-build \
     python3 \
-    curl clang
+    curl clang wget binutils-dev
 
 CMD ["bash"]

@@ -1,9 +1,9 @@
 services:
-  ubuntu14:
+  mcfi:
     build:
       context: .
       dockerfile: Dockerfile.ubuntu14
-    container_name: ubuntu14
+    container_name: mcfi
     volumes:
       - ../:/mnt/shared:z
       - /home/rombertus-laptop/spec:/mnt/spec:z
@@ -21,6 +21,17 @@ services:
     tty: true
     restart: always
 
+  picon:
+    build:
+      context: .
+      dockerfile: Dockerfile.ubuntu16
+    container_name: picon
+    volumes:
+      - ../:/mnt/shared:z
+      - /home/rombertus-laptop/spec:/mnt/spec:z
+    tty: true
+    restart: always
+
   ubuntu18:
     build:
       context: .
@@ -32,22 +43,22 @@ services:
     tty: true
     restart: always
 
-  ubuntu20:
+  cfixx:
     build:
       context: .
       dockerfile: Dockerfile.ubuntu20
-    container_name: ubuntu20
+    container_name: cfixx
     volumes:
       - ../:/mnt/shared:z
       - /home/rombertus-laptop/spec:/mnt/spec:z
     tty: true
     restart: always
 
-  ubuntu22:
+  custom:
     build:
       context: .
       dockerfile: Dockerfile.ubuntu22
-    container_name: ubuntu22
+    container_name: custom
     volumes:
       - ../:/mnt/shared:z
       - /home/rombertus-laptop/spec:/mnt/spec:z

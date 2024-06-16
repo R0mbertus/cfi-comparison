@@ -2,8 +2,10 @@ FROM ubuntu:16.04
 
 # Install required packages
 RUN apt-get update && apt-get install -y \
-    build-essential wget cmake nano \
-    ninja-build python3 curl git \
-    libboost-all-dev libelf-dev libiberty-dev clang
+    build-essential \
+    cmake \
+    ninja-build \
+    python3 \
+    curl clang wget binutils-dev
 
 CMD ["bash"]

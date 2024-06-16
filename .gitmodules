@@ -10,6 +10,3 @@
 [submodule "ConFIRM"]
 	path = eval/ConFIRM
 	url = https://github.com/R0mbertus/ConFIRM.git
-[submodule "CFIXX"]
-	path = policies/CFIXX
-	url = https://github.com/HexHive/CFIXX.git
