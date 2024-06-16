@@ -4,6 +4,6 @@ FROM ubuntu:16.04
 RUN apt-get update && apt-get install -y \
     build-essential wget cmake nano \
     ninja-build python3 curl git \
-    libboost-all-dev libelf-dev libiberty-dev
+    libboost-all-dev libelf-dev libiberty-dev clang
 
 CMD ["bash"]
