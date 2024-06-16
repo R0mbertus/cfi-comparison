@@ -1,9 +1,6 @@
 [submodule "ripe64"]
 	path = eval/ripe64
 	url = https://github.com/R0mbertus/ripe64.git
-[submodule "ccfi"]
-	path = policies/llvm34-ccfi
-	url = https://bitbucket.org/CCFI/llvm34-ccfi.git
 [submodule "picfi"]
 	path = policies/MCFI
 	url = https://github.com/mcfi/MCFI.git
@@ -13,3 +10,6 @@
 [submodule "ConFIRM"]
 	path = eval/ConFIRM
 	url = https://github.com/R0mbertus/ConFIRM.git
+[submodule "CFIXX"]
+	path = policies/CFIXX
+	url = https://github.com/HexHive/CFIXX.git
