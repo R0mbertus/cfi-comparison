@@ -15,8 +15,8 @@ then
         tar -xvf llvm-3.5.0.tar.xz
         mv clang+llvm-3.5.0-x86_64-linux-gnu llvm
     fi
-    LLVM_HOME=$PWD/llvm
-    PATH=.:$LLVM_HOME/bin:$PATH
+    export LLVM_HOME=$PWD/llvm
+    export PATH=.:$LLVM_HOME/bin:$PATH
 fi
 
 MCFI=$PWD

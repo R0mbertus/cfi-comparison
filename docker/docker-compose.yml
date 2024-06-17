@@ -21,33 +21,11 @@ services:
     tty: true
     restart: always
 
-  picon:
-    build:
-      context: .
-      dockerfile: Dockerfile.ubuntu16
-    container_name: picon
-    volumes:
-      - ../:/mnt/shared:z
-      - /home/rombertus-laptop/spec:/mnt/spec:z
-    tty: true
-    restart: always
-
   ubuntu18:
     build:
       context: .
       dockerfile: Dockerfile.ubuntu18
     container_name: ubuntu18
-    volumes:
-      - ../:/mnt/shared:z
-      - /home/rombertus-laptop/spec:/mnt/spec:z
-    tty: true
-    restart: always
-
-  cfixx:
-    build:
-      context: .
-      dockerfile: Dockerfile.ubuntu20
-    container_name: cfixx
     volumes:
       - ../:/mnt/shared:z
       - /home/rombertus-laptop/spec:/mnt/spec:z
