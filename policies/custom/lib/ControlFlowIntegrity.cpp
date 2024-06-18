@@ -35,30 +35,28 @@ void ControlFlowIntegrity::setupTypeAnalysis(Module &M,
     // Map types to functions
     for (auto &F : M)
         this->TypeToFuncs[F.getFunctionType()].insert(&F);
+}
 
+void insertCheck(Module &M, Function *currentFunc, std::vector<Value *> Args) {
     // Create function that will check if target is valid
     auto &C = M.getContext();
     auto *VoidTy = Type::getVoidTy(C);
     auto *Int32Ty = Type::getInt32Ty(C);
     auto *Int64Ty = Type::getInt64Ty(C);
     auto *Int64PtrTy = Type::getInt64PtrTy(C);
-    auto FnCallee = M.getOrInsertFunction(
-        "__cfi_valid_target",
-        FunctionType::get(VoidTy, {Int64PtrTy, Int64PtrTy, Int32Ty}, false));
-    this->CheckFunction = cast<Function>(FnCallee.getCallee());
 
     // Create the function body
-    auto *EntryBB = BasicBlock::Create(C, "entry", this->CheckFunction);
-    auto *ForCondBB = BasicBlock::Create(C, "for.cond", this->CheckFunction);
-    auto *ForBodyBB = BasicBlock::Create(C, "for.body", this->CheckFunction);
-    auto *ForIncBB = BasicBlock::Create(C, "for.inc", this->CheckFunction);
-    auto *ForEndBB = BasicBlock::Create(C, "for.end", this->CheckFunction);
-    auto *IfBB = BasicBlock::Create(C, "for.if", this->CheckFunction);
+    auto *EntryBB = BasicBlock::Create(C, "entry", currentFunc);
+    auto *ForCondBB = BasicBlock::Create(C, "for.cond", currentFunc);
+    auto *ForBodyBB = BasicBlock::Create(C, "for.body", currentFunc);
+    auto *ForIncBB = BasicBlock::Create(C, "for.inc", currentFunc);
+    auto *ForEndBB = BasicBlock::Create(C, "for.end", currentFunc);
+    auto *IfBB = BasicBlock::Create(C, "for.if", currentFunc);
 
     // Get the function arguments
-    auto *Arg1 = this->CheckFunction->arg_begin();
-    auto *Arg2 = std::next(this->CheckFunction->arg_begin());
-    auto *Arg3 = std::next(this->CheckFunction->arg_begin(), 2);
+    auto *Arg1 = Args.at(0);
+    auto *Arg2 = Args.at(1);
+    auto *Arg3 = Args.at(2);
 
     // Entry block - convert target pointer to int, do pre for loop
     IRBuilder<> Builder(EntryBB);
@@ -146,7 +144,7 @@ void ControlFlowIntegrity::instrumentTypes(Module &M) {
                     CB->getCalledOperand(), ValidTargetsArrayGEP,
                     ConstantInt::get(Type::getInt32Ty(M.getContext()),
                                      ValidTargetsArray.size())};
-                Builder.CreateCall(this->CheckFunction, Args);
+                insertCheck(M, CB->getFunction(), Args);
             }
         }
     }
