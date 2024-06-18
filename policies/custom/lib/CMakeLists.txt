@@ -2,10 +2,14 @@
 # ======================================================
 set(LLVM_CFI_PLUGINS
     ControlFlowIntegrity
+    OpaqueControlFlowIntegrity
 )
 
 set(ControlFlowIntegrity_SOURCES
     ControlFlowIntegrity.cpp)
+
+set(OpaqueControlFlowIntegrity_SOURCES
+    OpaqueControlFlowIntegrity.cpp)
 
 # CONFIGURE THE PLUGIN LIBRARIES
 # ==============================
