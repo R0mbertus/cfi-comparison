@@ -21,6 +21,7 @@
 #include "llvm/Passes/PassBuilder.h"
 #include "llvm/Passes/PassPlugin.h"
 
+#include <algorithm>
 #include <map>
 
 using namespace llvm;
@@ -97,6 +98,16 @@ void ControlFlowIntegrity::instrumentTypes(Module &M) {
     }
 
     for (CallBase *CB : Calls) {
+        IRBuilder<> Builder(CB);
+        std::set<Function *> ValidTargets =
+            this->TypeToFuncs[CB->getFunctionType()];
+        std::vector<Value *> ValidTargetsArray;
+        for (Function *F : ValidTargets) {
+            auto *FPtr =
+                Builder.CreatePtrToInt(F, Type::getInt64Ty(M.getContext()));
+            ValidTargetsArray.push_back(FPtr);
+        }
+
         insertCheck(M, CB);
     }
 }
