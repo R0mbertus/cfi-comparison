@@ -91,8 +91,10 @@ void insertCheck(Module &M, Function *currentFunc, std::vector<Value *> Args) {
 
     // Loop end block - if we reacher here none were valid targets, abort
     Builder.SetInsertPoint(ForEndBB);
-    // Builder.CreateCall(M.getOrInsertFunction("abort", VoidTy, nullptr));
-    Builder.CreateRetVoid();
+    auto *AbortFunc =
+        Intrinsic::getDeclaration(currentFunc->getParent(), Intrinsic::trap);
+    Builder.CreateCall(AbortFunc);
+    Builder.CreateUnreachable();
 }
 
 void ControlFlowIntegrity::instrumentTypes(Module &M) {
