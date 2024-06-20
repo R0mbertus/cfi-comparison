@@ -24,3 +24,4 @@ RUN apt-get update -y && apt-get upgrade -y && apt-get install -y              \
     libllvm15 llvm-15 llvm-15-dev llvm-15-doc llvm-15-examples llvm-15-runtime \
     libedit-dev libzstd-dev libcurl4-gnutls-dev clang-15
 
+CMD ["bash"]
