@@ -10,22 +10,22 @@ services:
     tty: true
     restart: always
 
-  ubuntu16:
+  typro:
     build:
-      context: .
-      dockerfile: Dockerfile.ubuntu16
-    container_name: ubuntu16
+      context: ../policies/TyPro-CFI/
+      dockerfile: Dockerfile
+    container_name: typro
     volumes:
       - ../:/mnt/shared:z
       - /home/rombertus-laptop/spec:/mnt/spec:z
     tty: true
     restart: always
 
-  ubuntu18:
+  main:
     build:
       context: .
-      dockerfile: Dockerfile.ubuntu18
-    container_name: ubuntu18
+      dockerfile: Dockerfile.ubuntu20
+    container_name: main
     volumes:
       - ../:/mnt/shared:z
       - /home/rombertus-laptop/spec:/mnt/spec:z
