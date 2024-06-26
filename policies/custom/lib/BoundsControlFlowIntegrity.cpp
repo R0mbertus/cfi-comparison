@@ -38,7 +38,8 @@ void ControlFlowIntegrity::setupTypeAnalysis(Module &M,
         this->TypeToFuncs[F.getFunctionType()].insert(&F);
 }
 
-void insertCheck(Module &M, CallBase *CB) {
+void insertCheck(Module &M, CallBase *CB, AllocaInst *ValidTargetsArray,
+                 size_t ValidTargetsArraySize) {
     // Create function that will check if target is valid
     IRBuilder<> Builder(CB);
 
@@ -48,9 +49,38 @@ void insertCheck(Module &M, CallBase *CB) {
     auto *CalleeInt =
         Builder.CreatePtrToInt(Callee, Builder.getInt64Ty(), "callee.int");
 
-    // Create constants for min and max addresses
-    auto *MinAddr = Builder.getInt64(0);
-    auto *MaxAddr = Builder.getInt64(INT64_MAX - 100);
+    // Run though valid targets and compare to find min and max
+    auto *Idx =
+        Builder.CreateAlloca(Type::getInt32Ty(M.getContext()), nullptr, "i");
+    Builder.CreateStore(ConstantInt::get(Type::getInt32Ty(M.getContext()), 0),
+                        Idx);
+    auto *MinAddr = Builder.CreateAlloca(Type::getInt64Ty(M.getContext()),
+                                         nullptr, "min.addr");
+    auto *MaxAddr = Builder.CreateAlloca(Type::getInt64Ty(M.getContext()),
+                                         nullptr, "max.addr");
+    for (size_t i = 0; i < ValidTargetsArraySize; i++) {
+        auto *IdxLoad =
+            Builder.CreateLoad(Type::getInt32Ty(M.getContext()), Idx);
+        auto *GEP =
+            Builder.CreateGEP(ArrayType::get(Type::getInt64Ty(M.getContext()),
+                                             ValidTargetsArraySize),
+                              ValidTargetsArray, IdxLoad);
+        auto *FPtr = Builder.CreateLoad(Type::getInt64Ty(M.getContext()), GEP);
+
+        auto *Cmp = Builder.CreateICmpEQ(CalleeInt, FPtr, "cmp");
+        auto *MinAddrVal =
+            Builder.CreateLoad(Type::getInt64Ty(M.getContext()), MinAddr);
+        auto *MaxAddrVal =
+            Builder.CreateLoad(Type::getInt64Ty(M.getContext()), MaxAddr);
+        auto *Min = Builder.CreateSelect(Cmp, FPtr, MinAddrVal, "min");
+        auto *Max = Builder.CreateSelect(Cmp, FPtr, MaxAddrVal, "max");
+        Builder.CreateStore(Min, MinAddr);
+        Builder.CreateStore(Max, MaxAddr);
+
+        auto *Inc = Builder.CreateAdd(
+            IdxLoad, ConstantInt::get(Type::getInt32Ty(M.getContext()), 1));
+        Builder.CreateStore(Inc, Idx);
+    }
 
     // Compare the callee address with the min and max addresses
     auto *CmpMin = Builder.CreateICmpUGE(CalleeInt, MinAddr, "cmp.min");
@@ -98,7 +128,8 @@ void ControlFlowIntegrity::instrumentTypes(Module &M) {
     }
 
     for (CallBase *CB : Calls) {
-        IRBuilder<> Builder(CB);
+        // Get valid target functions, convert to array of int in ir
+        IRBuilder<> Builder(&*CB);
         std::set<Function *> ValidTargets =
             this->TypeToFuncs[CB->getFunctionType()];
         std::vector<Value *> ValidTargetsArray;
@@ -107,8 +138,27 @@ void ControlFlowIntegrity::instrumentTypes(Module &M) {
                 Builder.CreatePtrToInt(F, Type::getInt64Ty(M.getContext()));
             ValidTargetsArray.push_back(FPtr);
         }
+        // convert ValidTargetsArray to array of int in ir
+        auto *ValidTargetsArrayTy = ArrayType::get(
+            Type::getInt64Ty(M.getContext()), ValidTargetsArray.size());
+        auto *ValidTargetsArrayGEP =
+            Builder.CreateAlloca(ValidTargetsArrayTy, nullptr, "valid_targets");
+        auto *Idx = Builder.CreateAlloca(Type::getInt32Ty(M.getContext()),
+                                         nullptr, "i");
+        Builder.CreateStore(
+            ConstantInt::get(Type::getInt32Ty(M.getContext()), 0), Idx);
+        for (size_t i = 0; i < ValidTargetsArray.size(); i++) {
+            auto *IdxLoad =
+                Builder.CreateLoad(Type::getInt32Ty(M.getContext()), Idx);
+            auto *GEP = Builder.CreateGEP(ValidTargetsArrayTy,
+                                          ValidTargetsArrayGEP, IdxLoad);
+            Builder.CreateStore(ValidTargetsArray[i], GEP);
+            auto *Inc = Builder.CreateAdd(
+                IdxLoad, ConstantInt::get(Type::getInt32Ty(M.getContext()), 1));
+            Builder.CreateStore(Inc, Idx);
+        }
 
-        insertCheck(M, CB);
+        insertCheck(M, CB, ValidTargetsArrayGEP, ValidTargetsArray.size());
     }
 }
 
